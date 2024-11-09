@@ -1,0 +1,82 @@
+
+
+services:
+  account:
+    build:
+      context: .
+      dockerfile: ./account/app.dockerfile
+    depends_on:
+      - account_db
+    environment:
+      DATABASE_URL: postgres://tim:admin@account_db:5432/account?sslmode=disable
+    restart: on-failure
+
+  catalog:
+    build:
+      context: .
+      dockerfile: ./catalog/app.dockerfile
+    depends_on:
+      - catalog_db
+    environment:
+      DATABASE_URL: http://catalog_db:9200
+    restart: on-failure
+
+
+  order:
+    build:
+      context: .
+      dockerfile: ./order/app.dockerfile
+    depends_on:
+      - order_db
+      - account
+      - catalog
+    environment:
+      ACCOUNT_SERVICE_URL: http://account:8080
+      CATALOG_SERVICE_URL: http://catalog:8080
+      DATABASE_URL: postgres://tim:admin@order_db:5432/order?sslmode=disable
+    restart: on-failure
+    
+
+  graphql:
+    build:
+      context: .
+      dockerfile: ./graphql/app.dockerfile
+    depends_on:
+      - account
+      - catalog
+      - order
+    environment:
+      ACCOUNT_SERVICE_URL: http://account:8080
+      CATALOG_SERVICE_URL: http://catalog:8080
+      ORDER_SERVICE_URL: http://order:8080
+    restart: on-failure
+
+
+  account_db:
+    build:
+      context: .
+      dockerfile: ./account/db.dockerfile
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: tim
+      POSTGRES_DB: account
+    restart: unless-stopped
+
+  catalog_db:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false 
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+
+  order_db:
+    build:
+      context: .
+      dockerfile: ./order/db.dockerfile
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: tim
+      POSTGRES_DB: order
+    restart: unless-stopped
+

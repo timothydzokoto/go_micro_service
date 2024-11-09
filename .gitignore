@@ -1,0 +1,48 @@
+# Go build artifacts
+/bin/
+/obj/
+/vendor/
+
+# Docker related
+*.log
+docker-compose.override.yml
+*.env
+
+# Node modules (if you have any JS/React or other front-end dependencies)
+node_modules/
+
+# IDE and editor specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build and temporary files
+*.out
+*.exe
+*.bak
+*.tmp
+*.pid
+*.log
+
+# Go specific (for Go modules)
+/go.sum
+/go.mod
+
+# PostgreSQL data
+account-db-data/
+/order-db-data/
+
+# Elasticsearch data
+/catalog_db-data/
+
+# Dockerfiles build cache
+.docker/
+
+# Miscellaneous
+*.tgz
+*.zip

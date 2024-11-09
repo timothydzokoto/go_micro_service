@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "./pb;pb";
+
+message Order {
+    message OrderedProduct {
+        string id = 1;
+        string name = 2;
+        string description = 3;
+        double price = 4;
+        uint64 quantity = 5;
+    }
+
+    string id = 1;
+    bytes createdAt = 2;
+    string accountId = 3;
+    double totalPrice = 4;
+    repeated OrderedProduct products = 5;
+}
+
+
+message PostOrderRequest {
+    message OrderProduct {
+        string productId = 1;
+        uint64 quantity = 2;
+    }
+
+    string accountId = 1;
+    repeated OrderProduct products = 2;
+}
+
+
+message PostOrderResponse {
+    Order order = 1;
+}
+
+  
+message GetOrderForAccountRequest {
+    string accountId = 1;
+}
+
+message GetOrderForAccountResponse {
+    repeated Order orders = 1;
+}
+
+
+service OrderService {
+    rpc PostOrder(PostOrderRequest) returns (PostOrderResponse) {}
+    rpc GetOrderForAccount(GetOrderForAccountRequest) returns (GetOrderForAccountResponse) {}
+}

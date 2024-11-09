@@ -1,0 +1,8 @@
+schema: schema.graphql
+
+models:
+  Account:
+    model: github.com/timothydzokoto/grpc_graphql_microservice/graphql.Account
+    fields:
+      orders:
+        resolver: true
