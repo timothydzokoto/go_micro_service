@@ -1,4 +1,4 @@
-
+#version: "3.8"
 
 services:
   account:
@@ -21,7 +21,6 @@ services:
       DATABASE_URL: http://catalog_db:9200
     restart: on-failure
 
-
   order:
     build:
       context: .
@@ -35,7 +34,6 @@ services:
       CATALOG_SERVICE_URL: http://catalog:8080
       DATABASE_URL: postgres://tim:admin@order_db:5432/order?sslmode=disable
     restart: on-failure
-    
 
   graphql:
     build:
@@ -51,7 +49,6 @@ services:
       ORDER_SERVICE_URL: http://order:8080
     restart: on-failure
 
-
   account_db:
     build:
       context: .
@@ -66,9 +63,9 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
     environment:
       - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false 
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=false
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" 
 
   order_db:
     build:
@@ -79,4 +76,3 @@ services:
       POSTGRES_USER: tim
       POSTGRES_DB: order
     restart: unless-stopped
-
